@@ -1,5 +1,8 @@
 # encoding : utf-8
+
 import numpy as np
+from neural_network import *
+
 
 
 if __name__ == "__main__":
@@ -13,26 +16,16 @@ if __name__ == "__main__":
 	# D_h le nombre de neurones de la couche cachée
 	# D_out est la dimension de sortie (nombre de neurones de la couche de sort
 	N, D_in, D_h, D_out = 30, 2, 10, 3
+	learning_rate = 0.1
+	
 	# Création d'une matrice d'entrée X et de sortie Y avec des valeurs aléatoires
 	X = np.random.random((N, D_in))
 	Y = np.random.random((N, D_out))
-	# Initialisation aléatoire des poids du réseau
-	W1 = 2 * np.random.random((D_in, D_h)) -1
-	b1 = np.zeros((1,D_h))
-	W2 = 2 * np.random.random((D_h, D_out)) -1
-	b2 = np.zeros((1,D_out))
-	############################
-	
-	########################
-	# Passe avant : calcul de la sortie prédite Y_pred #
-	####################################################
-	I1 = X.dot(W1) + b1 # Potentiel d'entrée de la couche cachée
-	O1 = 1/(1+np.exp(-I1)) # Sortie de la couche cachée (fonction d'activation de type sigmoïde)
-	I2 = O1.dot(W2) + b2 # Potentiel d'entrée de la couche de sortie
-	O2  =  1/(1+np.exp(-I2))  #  Sortie  de  la  couche  de  sortie  (fonction  d'activation  de  type sigmoïde)
-	Y_pred = O2 # Les valeurs prédites sont les sorties de la couche de sortie
-	########################################################
-	# Calcul et affichage de la fonction perte de type MSE #
-	########################################################
-	loss = np.square(Y_pred-Y).sum() / 2
-	print(loss)
+
+	nn = Network([D_in, D_h, D_out], AF_Sigmoid, L_MSE, learning_rate)
+	for i in range(30000):
+		Ypred = nn.forward_propagation(X)
+		loss = nn.compute_loss(Ypred, Y)
+		if i % 1000 == 0:		
+			print("iteration {} : ".format(i), loss)
+		nn.back_propagation(Ypred, Y)
