@@ -14,7 +14,7 @@ class L_MSE(LossFunction):
 	def apply(self, Ypred, Y):
 		return np.square(Y - Ypred).sum() / 2
 	
-	def apply_derivative(self, Ypred, Y):		
+	def apply_derivative(self, Ypred, Y):
 		return Ypred - Y
 
 
